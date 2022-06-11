@@ -32,13 +32,13 @@ def get_parameters():
 
     parser.add_argument('--dataset', metavar='DATASET', default='cifar10')
 
-    parser.add_argument('--datadir', type=str, default='data-local/images/cifar/cifar10/by-image',
+    parser.add_argument('--datadir', type=str, default='data-local/images/',
                         help='data dir')
     parser.add_argument('--train-subdir', type=str, default='train',
                         help='the subdirectory inside the data directory that contains the training data')
     parser.add_argument('--eval-subdir', type=str, default='val',
                         help='the subdirectory inside the data directory that contains the evaluation data')
-    parser.add_argument('--labels', default='data-local/images/cifar/cifar10/by-image/labels.txt', type=str, metavar='FILE',
+    parser.add_argument('--labels', default='data-local/images/labels.txt', type=str, metavar='FILE',
                         help='list of image labels (default: based on directory structure)')
 
     parser.add_argument('--arch', '-a', metavar='ARCH', default='convlarge') # kind of redundant , remove it

@@ -34,7 +34,8 @@ n_classes = len(info['label'])
 DataClass = getattr(medmnist, info['python_class'])
 task
 
-workdir = os.getcwd() + "/../images/cifar/cifar10/by-image/"
+workdir = os.getcwd() + "/data-local/images/"
+os.makedirs(workdir, exist_ok=True)
 
 train_dataset = DataClass(split='train', download=download)
 val_dataset = DataClass(split='val', download=download)
