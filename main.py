@@ -304,8 +304,8 @@ def validate(eval_loader, model):
 def save_checkpoint(state, is_best, dirpath, epoch):
     filename = 'checkpoint.{}.ckpt'.format(epoch)
     checkpoint_path = os.path.join(dirpath, filename)
-    #best_path = os.path.join(dirpath, 'best.ckpt')
-    best_path = "best.ckpt"
+    best_path = os.path.join(dirpath, 'best.ckpt')
+    #best_path = "best.ckpt"
     torch.save(state, checkpoint_path)
     if is_best:
         shutil.copyfile(checkpoint_path, best_path)
