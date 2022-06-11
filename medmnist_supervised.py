@@ -18,6 +18,7 @@ import matplotlib.image
 data_flag = 'pathmnist'
 # data_flag = 'breastmnist'
 download = True
+CUDA_LAUNCH_BLOCKING=1
 
 NUM_EPOCHS = 100
 BATCH_SIZE = 64
