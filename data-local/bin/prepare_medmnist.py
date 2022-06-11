@@ -46,7 +46,7 @@ train_dir = os.path.abspath(os.path.join(workdir, 'train'))
 val_dir = os.path.abspath(os.path.join(workdir, 'val'))
 test_dir = os.path.abspath(os.path.join(workdir, 'test'))
 
-number_of_labeled = 10000
+number_of_labeled = 1000
 labeled_indeces = np.random.uniform(low=0, high=len(train_dataset)-1, size=(number_of_labeled,)).astype('int')
 unlabeled_indeces = np.delete(range(len(train_dataset)), labeled_indeces)
 
