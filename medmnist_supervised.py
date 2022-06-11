@@ -54,7 +54,10 @@ train_dir = os.path.abspath(os.path.join(workdir, 'train'))
 val_dir = os.path.abspath(os.path.join(workdir, 'val'))
 test_dir = os.path.abspath(os.path.join(workdir, 'test'))
 
-train_dataset = torchvision.datasets.ImageFolder(train_dir, data_transform)[labeled_indeces]
+print("---"*30, train_dir)
+
+train_dataset = torchvision.datasets.ImageFolder(train_dir, data_transform)
+train_dataset = train_dataset[labeled_indeces]
 val_dataset = torchvision.datasets.ImageFolder(val_dir, data_transform)
 test_dataset = torchvision.datasets.ImageFolder(test_dir, data_transform)
 
