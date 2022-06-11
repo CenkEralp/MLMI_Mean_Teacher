@@ -97,9 +97,17 @@ def main(args):
 
     if args.resume:
         print(os.system('ls'))
-        print(os.getcwd())
+        # Open a file
+        path = os.getcwd()
+        print("-------------path: ", path)
+        dirs = os.listdir( path )
+
+        # This would print all the files and directories
+        for file in dirs:
+            print(file)
         print(args.resume)
         args.resume = os.getcwd() + "best.cpkt"
+        print(args.resume)
         assert os.path.isfile(args.resume), '=> no checkpoint found at: {}'.format(args.resume)
         print('=> loading checkpoint: {}'.format(args.resume))
 
