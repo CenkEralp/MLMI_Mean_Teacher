@@ -254,4 +254,4 @@ res_net_18 = nn.Sequential(
 
 fit(res_net_18, optimizer, lr_scheduler, task)
 
-test(res_net_18, test_loader, 'test', criterion)
+print("****************** SUPERVISED:", test(res_net_18, test_loader, 'test', criterion))
