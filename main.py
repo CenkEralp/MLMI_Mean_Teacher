@@ -106,7 +106,7 @@ def main(args):
         for file in dirs:
             print(file)
         print(args.resume)
-        args.resume = os.getcwd() + "/best.cpkt"
+        args.resume = os.getcwd() + "/best.ckpt"
         print(args.resume)
         assert os.path.isfile(args.resume), '=> no checkpoint found at: {}'.format(args.resume)
         print('=> loading checkpoint: {}'.format(args.resume))
