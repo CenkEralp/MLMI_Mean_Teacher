@@ -67,7 +67,6 @@ t = transforms.ToTensor()
 
 for i in range(len(train_dataset)):
     x, y = train_dataset[i][0], train_dataset[i][1]
-    train_dataset[i][0] = t(x)
     write_image(train_dir, i, x, y)
     if i in labeled_indeces:
         file_object.write('{}_{}.png {}\n'.format(i, y, y))
@@ -76,12 +75,10 @@ file_object.close()
 
 for i in range(len(val_dataset)):
     x, y = val_dataset[i][0], val_dataset[i][1][0]
-    val_dataset[i][0] = t(x)
     write_image(val_dir, i, x, y)
 
 for i in range(len(test_dataset)):
     x, y = test_dataset[i][0], test_dataset[i][1]
-    test_dataset[i][0] = t(x)
     write_image(test_dir, i, x, y)    
     
 
@@ -129,7 +126,9 @@ test_dir = os.path.abspath(os.path.join(workdir, 'test'))
 print("---"*30, train_dir)
 
 #train_dataset = torchvision.datasets.ImageFolder(train_dir, data_transform)
-train_dataset = [train_dataset[i] for i in labeled_indeces]
+train_dataset = [(t(train_dataset[i][0]), train_dataset[i][1]) for i in labeled_indeces]
+val_dataset = [(t(val_dataset[i][0]), val_dataset[i][1]) for i in len(val_dataset)]
+test_dataset = [(t(test_dataset[i][0]), test_dataset[i][1]) for i in len(test_dataset)]
 #val_dataset = torchvision.datasets.ImageFolder(val_dir, data_transform)
 #test_dataset = torchvision.datasets.ImageFolder(test_dir, data_transform)
 
