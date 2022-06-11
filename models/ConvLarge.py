@@ -95,7 +95,7 @@ class Net(nn.Module):
         if self.training:
              x = self.gn(x)
         
-        return self.res_net_18
+        return self.res_net_18(x)
 
         if self.args.sntg == True:
             return x,h
