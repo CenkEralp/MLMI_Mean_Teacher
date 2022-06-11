@@ -23,6 +23,7 @@ import torch.backends.cudnn as cudnn
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 import torchvision.datasets
+import os
 
 np.random.seed(5)
 torch.manual_seed(5)
@@ -95,6 +96,9 @@ def main(args):
                                 weight_decay=args.weight_decay)
 
     if args.resume:
+        os.system('ls')
+        print(os.getcwd())
+        print(args.resume)
         assert os.path.isfile(args.resume), '=> no checkpoint found at: {}'.format(args.resume)
         print('=> loading checkpoint: {}'.format(args.resume))
 
