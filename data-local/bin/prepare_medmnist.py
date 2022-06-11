@@ -43,7 +43,7 @@ test_dataset = DataClass(split='test', download=download)
 
 
 train_dir = os.path.abspath(os.path.join(workdir, 'train'))
-val_dir = os.path.abspath(os.path.join(workdir, 'train'))
+val_dir = os.path.abspath(os.path.join(workdir, 'val'))
 test_dir = os.path.abspath(os.path.join(workdir, 'test'))
 
 number_of_labeled = 10000
