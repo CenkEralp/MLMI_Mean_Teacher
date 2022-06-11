@@ -99,6 +99,7 @@ def main(args):
         os.system('ls')
         print(os.getcwd())
         print(args.resume)
+        args.resume = os.getcwd() + "best.cpkt"
         assert os.path.isfile(args.resume), '=> no checkpoint found at: {}'.format(args.resume)
         print('=> loading checkpoint: {}'.format(args.resume))
 
