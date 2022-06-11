@@ -63,10 +63,11 @@ def write_image(target_dir, index, x, y):
     return
 
 file_object = open(os.path.join(workdir, "labels.txt"), 'a')
+t = transforms.ToTensor()
 
 for i in range(len(train_dataset)):
     x, y = train_dataset[i][0], train_dataset[i][1]
-    
+    train_dataset[i][0] = t(x)
     write_image(train_dir, i, x, y)
     if i in labeled_indeces:
         file_object.write('{}_{}.png {}\n'.format(i, y, y))
@@ -75,10 +76,12 @@ file_object.close()
 
 for i in range(len(val_dataset)):
     x, y = val_dataset[i][0], val_dataset[i][1][0]
+    val_dataset[i][0] = t(x)
     write_image(val_dir, i, x, y)
 
 for i in range(len(test_dataset)):
     x, y = test_dataset[i][0], test_dataset[i][1]
+    test_dataset[i][0] = t(x)
     write_image(test_dir, i, x, y)    
     
 
