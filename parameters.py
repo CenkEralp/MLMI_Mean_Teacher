@@ -6,7 +6,7 @@ def get_parameters():
     parser = argparse.ArgumentParser(description='Mean Teacher Trainer Pytorch')
 
     # TODO Attention , Please change the following parameters to reproduce Report results
-    parser.add_argument('--sntg', default=True, help='Use SNTG loss?')  #
+    parser.add_argument('--sntg', default=False, help='Use SNTG loss?')  #
     parser.add_argument('--BN', default=True, help='Use Batch Normalization? ')
     parser.add_argument('--supervised_mode', default=False, type=bool, metavar='BOOL',
                         help='Training only with supervision')

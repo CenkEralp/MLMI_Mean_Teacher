@@ -23,6 +23,49 @@ class GaussianNoise(nn.Module):
         self.noise2.data.normal_(0, std=self.std1)
         return x + self.noise2[:c]
 
+class Lambda(nn.Module):
+    def __init__(self, func):
+        super().__init__()
+        self.func = func
+
+    def forward(self, x):
+        return self.func(x)
+
+class ResidualBlock(nn.Module):
+    
+    def __init__(self, in_channels, out_channels, stride=1):
+        super().__init__()      
+        self.info = 'in ' +  str(in_channels) + ', out ' + str(out_channels) + ', stride ' + str(stride)
+        if stride > 1 or in_channels != out_channels:
+            # Add strides in the skip connection and zeros for the new channels.
+            self.skip = Lambda(lambda x: F.pad(x[:, :, ::stride, ::stride], (0, 0, 0, 0, 0, out_channels - in_channels), mode="constant", value=0))
+        else:
+            self.skip = nn.Sequential()
+ 
+        conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1)
+        bn1 = nn.BatchNorm2d(out_channels)
+        conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, padding='same')
+        bn2 = nn.BatchNorm2d(out_channels)
+        self.l1 = nn.Sequential(conv1, bn1)
+        self.l2 = nn.Sequential(conv2, bn2)
+
+    def forward(self, input):
+        skip = self.skip(input)
+        x = self.l1(input)
+        x = F.relu(x)
+        x = self.l2(x)
+        return F.relu(x + skip)
+
+class ResidualStack(nn.Module):
+    
+    def __init__(self, in_channels, out_channels, stride, num_blocks):
+        super().__init__()
+        first = [ResidualBlock(in_channels, out_channels, stride)]
+        rest = [ResidualBlock(out_channels, out_channels) for i in range(num_blocks - 1)]
+        self.modules_list = nn.Sequential(*(first + rest))
+        
+    def forward(self, input):
+        return self.modules_list(input)
 
 class Net(nn.Module):
     def __init__(self,args,std = 0.15):
@@ -31,104 +74,28 @@ class Net(nn.Module):
 
         self.std = std
         self.gn = GaussianNoise(shape=(args.batch_size,3,32,32),std=self.std)
-        if self.args.BN:
-            self.BN1a = nn.BatchNorm2d(128)
-            self.BN1b = nn.BatchNorm2d(128)
-            self.BN1c = nn.BatchNorm2d(128)
-        self.conv1a = (nn.Conv2d(3, 128, 3,padding=1))
-        self.conv1b = (nn.Conv2d(128, 128, 3,padding=1))
-        self.conv1c = (nn.Conv2d(128, 128, 3,padding=1))
-        self.pool1 = nn.MaxPool2d(2, 2)
-        self.drop1 = nn.Dropout(0.5)
-        if self.args.BN:
-            self.BN2a = nn.BatchNorm2d(256)
-            self.BN2b = nn.BatchNorm2d(256)
-            self.BN2c = nn.BatchNorm2d(256)
-        self.conv2a = (nn.Conv2d(128, 256, 3, padding=1))
-        self.conv2b = (nn.Conv2d(256, 256, 3, padding=1))
-        self.conv2c = (nn.Conv2d(256, 256, 3, padding=1))
-        self.pool2 = nn.MaxPool2d(2, 2)
-        self.drop2 = nn.Dropout(0.5)#nn.Dropout2d
+        
 
-        if self.args.BN:
-            self.BN3a = nn.BatchNorm2d(512)
-            self.BN3b = nn.BatchNorm2d(256)
-            self.BN3c = nn.BatchNorm2d(128)
-        self.conv3a = (nn.Conv2d(256, 512, 3))
-        self.conv3b = (nn.Conv2d(512, 256, 1))
-        self.conv3c = (nn.Conv2d(256, 128, 1))
-        self.pool3 = nn.AvgPool2d(6,6)
-
-
-        self.dense = (nn.Linear(128, 10))
-        if self.args.BN:
-            self.BNdense = nn.BatchNorm1d(10)
-        for m in self.modules():
-            if isinstance(m, nn.Conv2d):
-                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
-                m.weight.data.normal_(0, math.sqrt(2. / n))
-            elif isinstance(m, nn.BatchNorm2d):
-                m.weight.data.fill_(1)
-                m.bias.data.zero_()
-        # for m in self.modules(): # TODO THIS IS A BIG PROBLEM
-        #     if isinstance(m, nn.Conv2d) or isinstance(m, nn.ConvTranspose2d) or isinstance(m, nn.Conv1d) or isinstance(
-        #             m, nn.Linear):
-        #         kaiming_normal_(m.weight.data)  # initialize weigths with normal distribution
-        #         if m.bias is not None:
-        #             m.bias.data.zero_()  # initialize bias as zero
-        #     elif isinstance(m, nn.BatchNorm2d) or isinstance(m, nn.BatchNorm1d):
-        #         m.weight.data.fill_(1)
-        #         m.bias.data.zero_()
-
+        self.res_net_18 = nn.Sequential(
+                nn.Conv2d(3, 64, kernel_size=7, stride=1, padding='same', bias=False),
+                nn.BatchNorm2d(64),
+                nn.ReLU(),
+                ResidualStack(64, 64, 1, 6),
+                ResidualStack(64, 128, 2, 8),
+                ResidualStack(128, 256, 2, 12),
+                ResidualStack(256, 512, 1, 6),
+                nn.AdaptiveAvgPool2d(1),
+                Lambda(lambda x: x.squeeze()),
+                nn.Linear(512, 10)
+            )
 
 
     def forward(self, x):
 
         if self.training:
              x = self.gn(x)
-        if self.args.BN:
-            x = F.leaky_relu(self.BN1a(self.conv1a(x)),negative_slope = 0.1)#self.BN1a
-            x = F.leaky_relu(self.BN1b(self.conv1b(x)),negative_slope = 0.1)#self.BN1b
-            x = F.leaky_relu(self.BN1c(self.conv1c(x)),negative_slope = 0.1)#self.BN1c
-            x = self.drop1(self.pool1(x))#
-
-            x = F.leaky_relu(self.BN2a(self.conv2a(x)), negative_slope = 0.1)#self.BN2a
-            x = F.leaky_relu(self.BN2b(self.conv2b(x)), negative_slope = 0.1)#self.BN2b
-            x = F.leaky_relu(self.BN2c(self.conv2c(x)), negative_slope = 0.1)#self.BN2c
-            x = self.drop2(self.pool2(x))#
-
-            x = F.leaky_relu(self.BN3a(self.conv3a(x)),negative_slope = 0.1)#self.BN3a
-            x = F.leaky_relu(self.BN3b(self.conv3b(x)),negative_slope = 0.1)#self.BN3b
-            x = F.leaky_relu(self.BN3c(self.conv3c(x)),negative_slope = 0.1)#self.BN3c
-            x = self.pool3(x)
-
-
-            h = x
-
-            x = x.view(-1, 128)
-            x = self.BNdense(self.dense(x))#F.softmax(,dim=1)# self.BNdense
-        else:
-            x = F.leaky_relu((self.conv1a(x)),negative_slope = 0.1)#self.BN1a
-            x = F.leaky_relu((self.conv1b(x)),negative_slope = 0.1)#self.BN1b
-            x = F.leaky_relu((self.conv1c(x)),negative_slope = 0.1)#self.BN1c
-            x = self.drop1(self.pool1(x))#
-
-            x = F.leaky_relu((self.conv2a(x)), negative_slope = 0.1)#self.BN2a
-            x = F.leaky_relu((self.conv2b(x)), negative_slope = 0.1)#self.BN2b
-            x = F.leaky_relu((self.conv2c(x)), negative_slope = 0.1)#self.BN2c
-            x = self.drop2(self.pool2(x))#
-
-            x = F.leaky_relu((self.conv3a(x)),negative_slope = 0.1)#self.BN3a
-            x = F.leaky_relu((self.conv3b(x)),negative_slope = 0.1)#self.BN3b
-            x = F.leaky_relu((self.conv3c(x)),negative_slope = 0.1)#self.BN3c
-            x = self.pool3(x)
-
-
-            h = x
-
-            x = x.view(-1, 128)
-            x =(self.dense(x))#F.softmax(,dim=1)# self.BNdense
-
+        
+        return self.res_net_18
 
         if self.args.sntg == True:
             return x,h

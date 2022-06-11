@@ -96,7 +96,8 @@ def main(args):
                                 weight_decay=args.weight_decay)
 
     if args.resume:
-        args.resume = os.getcwd() + "/best.ckpt"
+        if args.resume == "best":
+            args.resume = os.getcwd() + "/best.ckpt"
         assert os.path.isfile(args.resume), '=> no checkpoint found at: {}'.format(args.resume)
         print('=> loading checkpoint: {}'.format(args.resume))
 
