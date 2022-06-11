@@ -73,7 +73,7 @@ class Net(nn.Module):
         self.args = args
 
         self.std = std
-        self.gn = GaussianNoise(shape=(args.batch_size,3,32,32),std=self.std)
+        self.gn = GaussianNoise(shape=(args.batch_size,3,28,28),std=self.std)
         
 
         self.res_net_18 = nn.Sequential(
