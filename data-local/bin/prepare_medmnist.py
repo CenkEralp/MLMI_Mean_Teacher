@@ -55,7 +55,7 @@ print(label_names)
 
 def write_image(target_dir, index, x, y):
     subdir = os.path.join(target_dir, str(y))
-    name = "{}_{}.png".format((index, y))
+    name = "{}_{}.png".format(index, y)
     os.makedirs(subdir, exist_ok=True)
     save_image(x, os.path.join(subdir, name))
     return
