@@ -96,7 +96,7 @@ def main(args):
                                 weight_decay=args.weight_decay)
 
     if args.resume:
-        os.system('ls')
+        print(os.system('ls'))
         print(os.getcwd())
         print(args.resume)
         args.resume = os.getcwd() + "best.cpkt"
