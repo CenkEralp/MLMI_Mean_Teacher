@@ -85,12 +85,32 @@ def main(args):
 
 
 #   Intializing the model
+
+
     model = models.__dict__[args.model](args, data=None).cuda()
     ema_model = models.__dict__[args.model](args,nograd = True, data=None).cuda()
 
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
                                 momentum=args.momentum,
                                 weight_decay=args.weight_decay)
+
+    if args.resume:
+        assert os.path.isfile(args.resume), '=> no checkpoint found at: {}'.format(args.resume)
+        print('=> loading checkpoint: {}'.format(args.resume))
+
+        checkpoint = torch.load(args.resume)
+
+        # globel parameters
+        args.start_epoch = checkpoint['epoch']
+        global_step = checkpoint['global_step']
+        best_prec1 = checkpoint['best_prec1']
+        
+        # models and optimizers
+        model.load_state_dict(checkpoint['state_dict'])
+        ema_model.load_state_dict(checkpoint['ema_state_dict'])
+        optimizer.load_state_dict(checkpoint['optimizer'])
+
+        print('=> loaded checkpoint {} (epoch {})'.format(args.resume, checkpoint['epoch']))
 
     cudnn.benchmark = True
 
@@ -304,8 +324,8 @@ def validate(eval_loader, model):
 def save_checkpoint(state, is_best, dirpath, epoch):
     filename = 'checkpoint.{}.ckpt'.format(epoch)
     checkpoint_path = os.path.join(dirpath, filename)
-    best_path = os.path.join(dirpath, 'best.ckpt')
-    #best_path = "best.ckpt"
+    #best_path = os.path.join(dirpath, 'best.ckpt')
+    best_path = "best.ckpt"
     torch.save(state, checkpoint_path)
     if is_best:
         shutil.copyfile(checkpoint_path, best_path)
