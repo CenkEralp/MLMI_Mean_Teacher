@@ -19,7 +19,7 @@ os.makedirs(workdir, exist_ok=True)
 file_object = open(os.path.join(workdir, "labels.txt"), 'r')
 labeled_indeces = []
 for line in file_object:
-    labeled_indeces.append(line.split()[0])
+    labeled_indeces.append(int(line.split()[0]))
 file_object.close()
 labeled_indeces = np.array(labeled_indeces)
 
