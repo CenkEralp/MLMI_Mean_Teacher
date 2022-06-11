@@ -95,36 +95,6 @@ def main(args):
                                 momentum=args.momentum,
                                 weight_decay=args.weight_decay)
 
-    if args.resume:
-        print(os.system('ls'))
-        # Open a file
-        path = os.getcwd()
-        print("-------------path: ", path)
-        dirs = os.listdir( path )
-
-        # This would print all the files and directories
-        for file in dirs:
-            print(file)
-        print(args.resume)
-        args.resume = os.getcwd() + "/best.ckpt"
-        print(args.resume)
-        assert os.path.isfile(args.resume), '=> no checkpoint found at: {}'.format(args.resume)
-        print('=> loading checkpoint: {}'.format(args.resume))
-
-        checkpoint = torch.load(args.resume)
-
-        # globel parameters
-        args.start_epoch = checkpoint['epoch']
-        global_step = checkpoint['global_step']
-        best_prec1 = checkpoint['best_prec1']
-        
-        # models and optimizers
-        model.load_state_dict(checkpoint['state_dict'])
-        ema_model.load_state_dict(checkpoint['ema_state_dict'])
-        optimizer.load_state_dict(checkpoint['optimizer'])
-
-        print('=> loaded checkpoint {} (epoch {})'.format(args.resume, checkpoint['epoch']))
-
     cudnn.benchmark = True
 
     if args.evaluate:
