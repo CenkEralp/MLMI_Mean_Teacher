@@ -86,7 +86,7 @@ class Net(nn.Module):
                 ResidualStack(256, 512, 1, 6),
                 nn.AdaptiveAvgPool2d(1),
                 Lambda(lambda x: x.squeeze()),
-                nn.Linear(512, 8)
+                nn.Linear(512, 9)
             )
 
 
