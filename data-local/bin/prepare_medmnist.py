@@ -68,7 +68,7 @@ for i in range(len(train_dataset)):
     
     write_image(train_dir, i, x, y)
     if i in labeled_indeces:
-        file_object.write('{}_{}.png {}'.format(i, y, y))
+        file_object.write('{}_{}.png {}\n'.format(i, y, y))
 
 file_object.close()
 
