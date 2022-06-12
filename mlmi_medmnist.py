@@ -64,7 +64,7 @@ train_dataset = DataClass(split='train', transform=data_transform, download=down
 val_dataset = DataClass(split='val', transform=data_transform, download=download)
 test_dataset = DataClass(split='test', transform=data_transform, download=download)
 
-number_of_labeled = 1000
+number_of_labeled = len(train_dataset)
 labeled_indeces = [i for i in range(len(train_dataset))]
 random.shuffle(labeled_indeces)
 labeled_indeces = labeled_indeces[0:number_of_labeled]
