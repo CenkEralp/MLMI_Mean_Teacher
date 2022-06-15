@@ -14,6 +14,7 @@ from medmnist import INFO, Evaluator
 import os
 from torchvision.utils import save_image
 import matplotlib.image
+import random
 
 data_flag = 'pathmnist'
 # data_flag = 'breastmnist'
@@ -46,16 +47,19 @@ train_dir = os.path.abspath(os.path.join(workdir, 'train'))
 val_dir = os.path.abspath(os.path.join(workdir, 'val'))
 test_dir = os.path.abspath(os.path.join(workdir, 'test'))
 
-number_of_labeled = 1000
-labeled_indeces = np.random.uniform(low=0, high=len(train_dataset)-1, size=(number_of_labeled,)).astype('int')
+number_of_labeled = 9000
+labeled_indeces = [i for i in range(len(train_dataset))]
+random.shuffle(labeled_indeces)
+labeled_indeces = labeled_indeces[0:number_of_labeled]
 unlabeled_indeces = np.delete(range(len(train_dataset)), labeled_indeces)
+
 
 label_names = info['label']
 print(label_names)
 
 def write_image(target_dir, index, x, y):
-    subdir = os.path.join(target_dir, str(y))
-    name = "{}_{}.png".format(index, y)
+    subdir = os.path.join(target_dir, str(y[0]))
+    name = "{}_{}.png".format(index, y[0])
     os.makedirs(subdir, exist_ok=True)
     t = transforms.ToTensor()
     save_image(t(x), os.path.join(subdir, name))
@@ -68,7 +72,7 @@ for i in range(len(train_dataset)):
     
     write_image(train_dir, i, x, y)
     if i in labeled_indeces:
-        file_object.write('{}_{}.png {}\n'.format(i, y, y))
+        file_object.write('{}_{}.png {}\n'.format(i, y[0], y[0]))
 
 file_object.close()
 
