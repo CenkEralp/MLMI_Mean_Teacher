@@ -77,7 +77,7 @@ for i in range(len(train_dataset)):
 file_object.close()
 
 for i in range(len(val_dataset)):
-    x, y = val_dataset[i][0], val_dataset[i][1][0]
+    x, y = val_dataset[i][0], val_dataset[i][1]
     write_image(val_dir, i, x, y)
 
 for i in range(len(test_dataset)):
