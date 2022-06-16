@@ -48,9 +48,23 @@ val_dir = os.path.abspath(os.path.join(workdir, 'val'))
 test_dir = os.path.abspath(os.path.join(workdir, 'test'))
 
 number_of_labeled = 9000
+number_of_class = 9
+"""
 labeled_indeces = [i for i in range(len(train_dataset))]
 random.shuffle(labeled_indeces)
 labeled_indeces = labeled_indeces[0:number_of_labeled]
+unlabeled_indeces = np.delete(range(len(train_dataset)), labeled_indeces)
+"""
+
+label_per_class = number_of_labeled // number_of_class
+labels = np.array([train_dataset[i][1][0] for i in range(len(train_dataset))])
+labeled_indeces = []
+unlabeled_idx = np.array(range(len(labels))) 
+for i in range(number_of_class): 
+    idx = np.where(labels == i)[0] 
+    idx = np.random.choice(idx, label_per_class, False) 
+    labeled_indeces.append(idx) 
+labeled_indeces = np.array(labeled_indeces)
 unlabeled_indeces = np.delete(range(len(train_dataset)), labeled_indeces)
 
 
