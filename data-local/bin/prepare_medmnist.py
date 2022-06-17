@@ -15,6 +15,7 @@ import os
 from torchvision.utils import save_image
 import matplotlib.image
 import random
+import sys
 
 data_flag = 'pathmnist'
 # data_flag = 'breastmnist'
@@ -47,7 +48,8 @@ train_dir = os.path.abspath(os.path.join(workdir, 'train'))
 val_dir = os.path.abspath(os.path.join(workdir, 'val'))
 test_dir = os.path.abspath(os.path.join(workdir, 'test'))
 
-number_of_labeled = 9000
+number_of_labeled = int(sys.argv[1])
+print("----------number_of_labeled:", number_of_labeled)
 number_of_class = 9
 """
 labeled_indeces = [i for i in range(len(train_dataset))]
