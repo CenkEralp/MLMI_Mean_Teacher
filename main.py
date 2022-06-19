@@ -206,7 +206,7 @@ def train(train_loader, model, ema_model, optimizer, epoch):
         input_var = torch.autograd.Variable(input).cuda()
 
 
-        target_var = torch.autograd.Variable(target.cuda(async=True))
+        target_var = torch.autograd.Variable(target.cuda(non_blocking=True))
 
         minibatch_size = len(target_var)
         labeled_minibatch_size = target_var.data.ne(NO_LABEL).sum()
@@ -304,7 +304,7 @@ def validate(eval_loader, model):
 
         with torch.no_grad():
             input_var = input.cuda()
-            target_var = target.cuda(async=True)
+            target_var = target.cuda(non_blocking=True)
 
             labeled_minibatch_size = target_var.data.ne(NO_LABEL).sum()
             assert labeled_minibatch_size > 0
