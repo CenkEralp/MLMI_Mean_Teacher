@@ -68,7 +68,7 @@ class ResidualStack(nn.Module):
         return self.modules_list(input)
 
 class Net(nn.Module):
-    def __init__(self,args,std = 0.15):
+    def __init__(self,args,std = 0.05):
         super(Net, self).__init__()
         self.args = args
 
