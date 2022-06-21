@@ -231,7 +231,7 @@ def train(train_loader, model, ema_model, optimizer, epoch):
                 ema_model_out,ema_h = ema_model(ema_input_var)
 
             else:
-                ema_model_out = ema_model(ema_input_var)
+                ema_model_out = ema_model(ema_input_var, ema_input=True)
 
             ema_logit = ema_model_out
 

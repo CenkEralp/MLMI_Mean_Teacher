@@ -90,9 +90,9 @@ class Net(nn.Module):
             )
 
 
-    def forward(self, x):
+    def forward(self, x, ema_input=False):
 
-        if self.training:
+        if self.training and ema_input:
              x = self.gn(x)
         
         return self.res_net_18(x)
