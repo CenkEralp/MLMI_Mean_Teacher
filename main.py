@@ -154,9 +154,9 @@ def main(args):
 
             ema_prec1 = validate(eval_loader, ema_model)
 
-            print('Accuracy of the Student network on the 10000 test images: %d %%' % (
+            print('Accuracy of the Student network on the 10000 test images: %.2f %%' % (
                 prec1))
-            print('Accuracy of the Teacher network on the 10000 test images: %d %%' % (
+            print('Accuracy of the Teacher network on the 10000 test images: %.2f %%' % (
                 ema_prec1))
             test_writer.add_scalar('Accuracy Student', prec1, epoch)
             test_writer.add_scalar('Accuracy Teacher', ema_prec1, epoch)
