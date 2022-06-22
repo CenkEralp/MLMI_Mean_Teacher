@@ -59,7 +59,8 @@ unlabeled_indeces = np.delete(range(len(train_dataset)), labeled_indeces)
 """
 
 label_per_class = number_of_labeled // number_of_class
-labels = np.array([train_dataset[i][1][0] for i in range(len(train_dataset))])
+Train_len = len(train_dataset)
+labels = np.array([train_dataset[i][1][0] for i in range(Train_len)])
 labeled_indeces = []
 unlabeled_idx = np.array(range(len(labels))) 
 for i in range(number_of_class): 
@@ -67,7 +68,12 @@ for i in range(number_of_class):
     idx = np.random.choice(idx, label_per_class, False) 
     labeled_indeces.append(idx) 
 labeled_indeces = np.array(labeled_indeces)
-unlabeled_indeces = np.delete(range(len(train_dataset)), labeled_indeces)
+
+try:
+    Train_percentage = int(sys.argv[2])
+    unlabeled_indeces = np.random.choice(np.delete(range(Train_len), labeled_indeces), (Train_len * Train_percentage) // 100, False)
+except:
+    unlabeled_indeces = np.delete(range(Train_len), labeled_indeces)
 
 
 label_names = info['label']
