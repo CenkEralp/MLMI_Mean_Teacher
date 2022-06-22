@@ -71,9 +71,9 @@ labeled_indeces = np.array(labeled_indeces)
 
 try:
     Train_percentage = int(sys.argv[2])
-    unlabeled_indeces = np.random.choice(np.delete(range(Train_len), labeled_indeces), (Train_len * Train_percentage) // 100, False)
+    unlabeled_indeces = np.random.choice(range(Train_len), (Train_len * Train_percentage) // 100, False)
 except:
-    unlabeled_indeces = np.delete(range(Train_len), labeled_indeces)
+    unlabeled_indeces = range(Train_len)
 
 
 label_names = info['label']
