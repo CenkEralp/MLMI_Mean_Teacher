@@ -118,11 +118,11 @@ def main(args):
     if args.evaluate:
         print('Evaluating the primary model')
         acc1 = validate(eval_loader, model)
-        print('Accuracy of the Student network on the 10000 test images: %d %%' % (
+        print('Accuracy of the Student network on the 10000 test images: %.2f %%' % (
                 acc1))
         print('Evaluating the Teacher model')
         acc2 = validate(eval_loader, ema_model)
-        print('Accuracy of the Teacher network on the 10000 test images: %d %%' % (
+        print('Accuracy of the Teacher network on the 10000 test images: %.2f %%' % (
                 acc2))
         return
 
@@ -285,9 +285,9 @@ def train(train_loader, model, ema_model, optimizer, epoch):
         # print statistics
         running_loss += loss.item()
 
-        if i % 20 == 19:    # print every 20 mini-batches
+        if i % 200 == 199:    # print every 20 mini-batches
             print('[Epoch: %d, Iteration: %5d] loss: %.5f' %
-                  (epoch + 1, i + 1, running_loss / 20))
+                  (epoch + 1, i + 1, running_loss / 200))
             running_loss = 0.0
 
         lossess.update(loss.item(), input.size(0))
