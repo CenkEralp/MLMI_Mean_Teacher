@@ -55,7 +55,7 @@ number_of_class = 9
 labeled_indeces = [i for i in range(len(train_dataset))]
 random.shuffle(labeled_indeces)
 labeled_indeces = labeled_indeces[0:number_of_labeled]
-unlabeled_indeces = np.delete(range(len(train_dataset)), labeled_indeces)
+unlabeled_indeces = np.delete(range(Train_len), labeled_indeces)
 """
 
 label_per_class = number_of_labeled // number_of_class
@@ -71,9 +71,9 @@ labeled_indeces = np.array(labeled_indeces)
 
 try:
     Train_percentage = int(sys.argv[2])
-    unlabeled_indeces = np.random.choice(range(Train_len), (Train_len * Train_percentage) // 100, False)
+    unlabeled_indeces = np.random.choice(np.delete(range(Train_len), labeled_indeces), (Train_len * Train_percentage) // 100, False)
 except:
-    unlabeled_indeces = range(Train_len)
+    unlabeled_indeces = np.delete(range(Train_len), labeled_indeces)
 
 
 label_names = info['label']
