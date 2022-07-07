@@ -6,7 +6,7 @@ import torch
 
 from Datasets.data import NO_LABEL
 from misc.utils import *
-from tensorboardX import SummaryWriter
+#from tensorboardX import SummaryWriter
 import datetime
 from parameters import get_parameters
 import models
