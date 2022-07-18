@@ -57,9 +57,9 @@ random.shuffle(labeled_indeces)
 labeled_indeces = labeled_indeces[0:number_of_labeled]
 unlabeled_indeces = np.delete(range(len(train_dataset)), labeled_indeces)
 """
-unbalanced = True
+unbalanced = False
 unbalanced_n_class = 5
-small_validation = False
+small_validation = True
 if unbalanced:
     label_per_class = number_of_labeled // unbalanced_n_class
     Train_len = len(train_dataset)
@@ -112,7 +112,9 @@ for i in range(len(train_dataset)):
 
 file_object.close()
 
-for i in range(len(val_dataset)):
+len_val_dataset = len(val_dataset) if small_validation else int(len(val_dataset) * 0.2)
+
+for i in range(len_val_dataset):
     x, y = val_dataset[i][0], val_dataset[i][1]
     write_image(val_dir, i, x, y)
 
