@@ -57,17 +57,31 @@ random.shuffle(labeled_indeces)
 labeled_indeces = labeled_indeces[0:number_of_labeled]
 unlabeled_indeces = np.delete(range(len(train_dataset)), labeled_indeces)
 """
-
-label_per_class = number_of_labeled // number_of_class
-Train_len = len(train_dataset)
-labels = np.array([train_dataset[i][1][0] for i in range(Train_len)])
-labeled_indeces = []
-unlabeled_idx = np.array(range(len(labels))) 
-for i in range(number_of_class): 
-    idx = np.where(labels == i)[0] 
-    idx = np.random.choice(idx, label_per_class, False) 
-    labeled_indeces.append(idx) 
-labeled_indeces = np.array(labeled_indeces)
+unbalanced = True
+unbalanced_n_class = 5
+small_validation = False
+if unbalanced:
+    label_per_class = number_of_labeled // unbalanced_n_class
+    Train_len = len(train_dataset)
+    labels = np.array([train_dataset[i][1][0] for i in range(Train_len)])
+    labeled_indeces = []
+    unlabeled_idx = np.array(range(len(labels))) 
+    for i in range(unbalanced_n_class): 
+        idx = np.where(labels == i)[0] 
+        idx = np.random.choice(idx, label_per_class, False) 
+        labeled_indeces.append(idx) 
+    labeled_indeces = np.array(labeled_indeces)
+else:
+    label_per_class = number_of_labeled // number_of_class
+    Train_len = len(train_dataset)
+    labels = np.array([train_dataset[i][1][0] for i in range(Train_len)])
+    labeled_indeces = []
+    unlabeled_idx = np.array(range(len(labels))) 
+    for i in range(number_of_class): 
+        idx = np.where(labels == i)[0] 
+        idx = np.random.choice(idx, label_per_class, False) 
+        labeled_indeces.append(idx) 
+    labeled_indeces = np.array(labeled_indeces)
 
 try:
     Train_percentage = int(sys.argv[2])
