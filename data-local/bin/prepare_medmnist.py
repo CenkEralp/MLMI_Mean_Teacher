@@ -78,10 +78,11 @@ if unbalanced:
     for i in unlabeled_classes:
         idx = np.where(labels == i)[0] 
         #idx = np.random.choice(idx, len(labels) // len(unlabeled_classes), False) 
-        labeled_indeces.append(idx)
+        unlabeled_indeces.append(idx)
 else:
     unlabeled_indeces = range(Train_len)
 
+unlabeled_indeces = np.array(unlabeled_indeces)
 
 label_names = info['label']
 print(label_names)
